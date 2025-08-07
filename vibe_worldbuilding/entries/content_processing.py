@@ -16,6 +16,7 @@ from ..utils.content_parsing import (
     extract_description_from_content,
     extract_frontmatter,
 )
+from ..utils.path_helpers import resolve_world_path
 
 
 async def generate_entry_descriptions(
@@ -43,12 +44,13 @@ async def generate_entry_descriptions(
         ]
 
     try:
-        world_path = Path(world_directory)
+        # CRITICAL FIX: Resolve world directory against base directory
+        world_path = resolve_world_path(world_directory)
         if not world_path.exists():
             return [
                 types.TextContent(
                     type="text",
-                    text=f"Error: World directory {world_directory} does not exist",
+                    text=f"Error: World directory {world_path} does not exist",
                 )
             ]
 
@@ -142,12 +144,13 @@ async def add_entry_frontmatter(
         ]
 
     try:
-        world_path = Path(world_directory)
+        # CRITICAL FIX: Resolve world directory against base directory
+        world_path = resolve_world_path(world_directory)
         if not world_path.exists():
             return [
                 types.TextContent(
                     type="text",
-                    text=f"Error: World directory {world_directory} does not exist",
+                    text=f"Error: World directory {world_path} does not exist",
                 )
             ]
 

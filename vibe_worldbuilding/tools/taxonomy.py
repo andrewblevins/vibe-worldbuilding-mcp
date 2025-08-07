@@ -17,6 +17,7 @@ from ..config import (
     MARKDOWN_EXTENSION,
     TAXONOMY_OVERVIEW_SUFFIX,
 )
+from ..utils.path_helpers import resolve_world_path
 
 if FAL_AVAILABLE:
     import requests
@@ -124,12 +125,13 @@ async def _create_taxonomy_structure(
         List containing success message with created taxonomy details
     """
     try:
-        world_path = Path(world_directory)
+        # CRITICAL FIX: Resolve world directory against base directory
+        world_path = resolve_world_path(world_directory)
         if not world_path.exists():
             return [
                 types.TextContent(
                     type="text",
-                    text=f"Error: World directory {world_directory} does not exist",
+                    text=f"Error: World directory {world_path} does not exist",
                 )
             ]
 

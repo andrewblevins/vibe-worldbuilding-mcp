@@ -13,6 +13,7 @@ from typing import Any, List
 import mcp.types as types
 
 from ..config import BUILD_TIMEOUT_SECONDS, CONTENT_SYMLINK_DIRS, DEFAULT_SITE_DIR
+from ..utils.path_helpers import resolve_world_path
 
 
 async def build_static_site(
@@ -95,10 +96,10 @@ def _validate_build_environment(world_directory: str) -> tuple[Path, Path]:
     Raises:
         Exception: If validation fails
     """
-    # Validate world directory exists
-    world_path = Path(world_directory)
+    # CRITICAL FIX: Resolve world directory against base directory
+    world_path = resolve_world_path(world_directory)
     if not world_path.exists():
-        raise Exception(f"Error: World directory {world_directory} does not exist")
+        raise Exception(f"Error: World directory {world_path} does not exist")
 
     # Check if it's a valid world directory (has overview folder)
     overview_path = world_path / "overview"

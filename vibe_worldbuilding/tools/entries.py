@@ -41,7 +41,23 @@ async def handle_entry_tool(
     Raises:
         ValueError: If tool name is not recognized
     """
+    import datetime
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(f"[{timestamp}] [ENTRY HANDLER DEBUG] ===== ENTRY TOOL HANDLER CALLED =====")
+    print(f"[{timestamp}] [ENTRY HANDLER DEBUG] Tool name: {name}")
+    print(f"[{timestamp}] [ENTRY HANDLER DEBUG] Arguments: {arguments}")
+    
     if name not in ENTRY_HANDLERS:
+        print(f"[{timestamp}] [ENTRY HANDLER DEBUG] Unknown entry tool: {name}")
         raise ValueError(f"Unknown entry tool: {name}")
 
-    return await ENTRY_HANDLERS[name](arguments)
+    print(f"[{timestamp}] [ENTRY HANDLER DEBUG] Calling handler for {name}")
+    try:
+        result = await ENTRY_HANDLERS[name](arguments)
+        print(f"[{timestamp}] [ENTRY HANDLER DEBUG] Handler completed successfully")
+        return result
+    except Exception as e:
+        print(f"[{timestamp}] [ENTRY HANDLER DEBUG] Handler failed with exception: {e}")
+        import traceback
+        traceback.print_exc()
+        raise

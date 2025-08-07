@@ -139,22 +139,49 @@ async def handle_call_tool(
     name: str, arguments: dict[str, Any] | None
 ) -> list[types.TextContent]:
     """Handle tool calls for worldbuilding operations."""
+    import datetime
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(f"[{timestamp}] [WORLDBUILDING SERVER DEBUG] ===== TOOL CALL RECEIVED =====")
+    print(f"[{timestamp}] [WORLDBUILDING SERVER DEBUG] Tool name: {name}")
+    print(f"[{timestamp}] [WORLDBUILDING SERVER DEBUG] Arguments: {arguments}")
+    
     try:
+        print(f"[{timestamp}] [WORLDBUILDING SERVER DEBUG] Routing tool call...")
+        
         # Route to appropriate tool handler based on tool name
         if name in WORLD_HANDLERS:
-            return await handle_world_tool(name, arguments)
+            print(f"[{timestamp}] [WORLDBUILDING SERVER DEBUG] Routing to WORLD_HANDLERS")
+            result = await handle_world_tool(name, arguments)
+            print(f"[{timestamp}] [WORLDBUILDING SERVER DEBUG] WORLD_HANDLERS completed")
+            return result
         elif name in TAXONOMY_HANDLERS:
-            return await handle_taxonomy_tool(name, arguments)
+            print(f"[{timestamp}] [WORLDBUILDING SERVER DEBUG] Routing to TAXONOMY_HANDLERS")
+            result = await handle_taxonomy_tool(name, arguments)
+            print(f"[{timestamp}] [WORLDBUILDING SERVER DEBUG] TAXONOMY_HANDLERS completed")
+            return result
         elif name in ENTRY_HANDLERS:
-            return await handle_entry_tool(name, arguments)
+            print(f"[{timestamp}] [WORLDBUILDING SERVER DEBUG] Routing to ENTRY_HANDLERS")
+            result = await handle_entry_tool(name, arguments)
+            print(f"[{timestamp}] [WORLDBUILDING SERVER DEBUG] ENTRY_HANDLERS completed")
+            return result
         elif name in IMAGE_HANDLERS:
-            return await handle_image_tool(name, arguments)
+            print(f"[{timestamp}] [WORLDBUILDING SERVER DEBUG] Routing to IMAGE_HANDLERS")
+            result = await handle_image_tool(name, arguments)
+            print(f"[{timestamp}] [WORLDBUILDING SERVER DEBUG] IMAGE_HANDLERS completed")
+            return result
         elif name in SITE_HANDLERS:
-            return await handle_site_tool(name, arguments)
+            print(f"[{timestamp}] [WORLDBUILDING SERVER DEBUG] Routing to SITE_HANDLERS")
+            result = await handle_site_tool(name, arguments)
+            print(f"[{timestamp}] [WORLDBUILDING SERVER DEBUG] SITE_HANDLERS completed")
+            return result
         else:
+            print(f"[{timestamp}] [WORLDBUILDING SERVER DEBUG] Unknown tool: {name}")
             return [types.TextContent(type="text", text=f"Unknown tool: {name}")]
 
     except Exception as e:
+        print(f"[{timestamp}] [WORLDBUILDING SERVER DEBUG] Exception in handle_call_tool: {e}")
+        import traceback
+        traceback.print_exc()
         return [
             types.TextContent(
                 type="text", text=f"Error executing tool '{name}': {str(e)}"

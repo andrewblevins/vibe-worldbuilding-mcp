@@ -204,6 +204,28 @@ def build_taxonomy_overview_path(
     return world_path / "taxonomies" / f"{clean_taxonomy}-overview{extension}"
 
 
+def resolve_world_path(world_directory: str) -> Path:
+    """Resolve world directory against base directory.
+    
+    Handles both absolute and relative paths, resolving relative paths
+    against the configured base directory.
+
+    Args:
+        world_directory: World directory path (absolute or relative)
+
+    Returns:
+        Resolved absolute path to world directory
+    """
+    from ..config import DEFAULT_BASE_DIRECTORY
+    
+    world_path = Path(world_directory)
+    if world_path.is_absolute():
+        return world_path
+    else:
+        base_path = Path(DEFAULT_BASE_DIRECTORY)
+        return base_path / world_directory
+
+
 def list_taxonomy_directories(world_path: Path) -> List[str]:
     """List all taxonomy directories in a world.
 
