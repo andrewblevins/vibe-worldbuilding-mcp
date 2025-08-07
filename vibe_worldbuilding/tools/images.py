@@ -357,7 +357,7 @@ async def _generate_image_via_fal(prompt: str, aspect_ratio: str) -> dict:
 
     payload = {"prompt": prompt, "aspect_ratio": aspect_ratio, "num_images": 1}
 
-    response = requests.post(FAL_API_URL, headers=headers, json=payload)
+    response = requests.post(FAL_API_URL, headers=headers, json=payload, timeout=30)
 
     if response.status_code != 200:
         raise Exception(
@@ -371,7 +371,7 @@ async def _generate_image_via_fal(prompt: str, aspect_ratio: str) -> dict:
 
     # Download the image data
     image_url = result["images"][0]["url"]
-    image_response = requests.get(image_url)
+    image_response = requests.get(image_url, timeout=30)
 
     if image_response.status_code != 200:
         raise Exception(f"Failed to download image from {image_url}")
