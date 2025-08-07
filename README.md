@@ -6,14 +6,30 @@
 
 ## ⚡ Quick Start
 
-### 1. Install Dependencies
+### Option A: Automated Setup (Recommended)
 ```bash
-# Python dependencies
+# Run the setup script - handles everything automatically
+python3 scripts/setup.py
+```
+
+### Option B: Manual Setup
+```bash
+# Create virtual environment (recommended)
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install Python dependencies
 pip install -e .
 
-# Node.js dependencies  
+# Node.js dependencies (for website generation)  
 npm install
 ```
+
+**Why use a virtual environment?**
+- Isolates project dependencies from system Python
+- Prevents conflicts with other Python projects
+- Ensures consistent dependency versions
+- Required for proper MCP server functionality
 
 ### 2. Configure FAL API (Optional - for image generation)
 ```bash
@@ -21,20 +37,18 @@ npm install
 echo "FAL_KEY=your_api_key_here" > .env
 ```
 
-### 3. Set Up MCP Server
-Add to your Claude Desktop configuration:
-```json
-{
-  "mcpServers": {
-    "vibe-worldbuilding": {
-      "command": "python3",
-      "args": ["./vibe_worldbuilding_server.py"],
-      "env": {
-        "FAL_KEY": "your_fal_api_key_here"
-      }
-    }
-  }
-}
+### 3. Development Ready
+Your MCP server is now ready for development and testing:
+
+```bash
+# Activate virtual environment
+source venv/bin/activate
+
+# Test the server manually
+python vibe_worldbuilding_server.py
+
+# Or integrate with custom MCP clients
+# (web interfaces, Claude Code, etc.)
 ```
 
 ### 4. Create Your First World
@@ -43,6 +57,31 @@ Add to your Claude Desktop configuration:
 2. Claude uses MCP tools to build complete world structure
 3. Generated world includes entries, images, and navigable website
 ```
+
+## 🔧 Troubleshooting
+
+### MCP Server Issues
+
+**Tool execution hangs or fails:**
+```bash
+# Check if virtual environment is activated
+source venv/bin/activate
+
+# Verify all dependencies are installed
+pip install -e .
+
+# Test dependencies
+python -c "import requests, mcp; print('Dependencies OK')"
+```
+
+**Missing Dependencies:**
+- **requests**: Required for FAL API image generation
+- **mcp**: Required for MCP server functionality  
+- Use virtual environment to avoid conflicts with system packages
+
+**Permission Issues:**
+- Ensure MCP server has write access to output directory
+- Check that Python path in Claude Desktop config is correct
 
 ## 🌟 What You Get
 

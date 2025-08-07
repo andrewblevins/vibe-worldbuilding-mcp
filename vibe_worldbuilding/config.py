@@ -37,6 +37,9 @@ DEFAULT_IMAGE_ASPECT_RATIO = "1:1"
 DEFAULT_SITE_DIR = "site"
 DEFAULT_UNIQUE_SUFFIX = "timestamp"
 
+# Base directory for world creation (can be overridden by environment variable)
+DEFAULT_BASE_DIRECTORY = os.environ.get("WORLDBUILDING_BASE_DIR", ".")
+
 # File extensions and patterns
 MARKDOWN_EXTENSION = ".md"
 IMAGE_EXTENSION = ".png"

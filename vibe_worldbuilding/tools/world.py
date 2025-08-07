@@ -12,6 +12,7 @@ from typing import Any
 import mcp.types as types
 
 from ..config import (
+    DEFAULT_BASE_DIRECTORY,
     DEFAULT_UNIQUE_SUFFIX,
     FAL_API_KEY,
     FAL_API_URL,
@@ -47,8 +48,14 @@ async def instantiate_world(
     world_name = arguments.get("world_name", "")
     world_content = arguments.get("world_content", "")
     taxonomies = arguments.get("taxonomies", [])
-    base_directory = arguments.get("base_directory", ".")
+    base_directory = arguments.get("base_directory", DEFAULT_BASE_DIRECTORY)
     unique_suffix = arguments.get("unique_suffix", DEFAULT_UNIQUE_SUFFIX)
+    
+    # Debug logging
+    print(f"[WORLD_TOOL_DEBUG] world_name: {world_name}")
+    print(f"[WORLD_TOOL_DEBUG] base_directory: {base_directory}")
+    print(f"[WORLD_TOOL_DEBUG] DEFAULT_BASE_DIRECTORY: {DEFAULT_BASE_DIRECTORY}")
+    print(f"[WORLD_TOOL_DEBUG] taxonomies: {taxonomies}")
 
     if not world_name or not world_content:
         return [
@@ -86,12 +93,23 @@ async def instantiate_world(
         image_generation_info = ""
         favicon_info = ""
         if FAL_API_KEY and FAL_AVAILABLE:
-            image_generation_info = await _generate_overview_images(
-                world_path, world_name, world_content
-            )
-            favicon_info = await _generate_world_favicon(
-                world_path, world_name, world_content
-            )
+            try:
+                # Add timeout protection for FAL API calls
+                import asyncio
+                image_generation_info = await asyncio.wait_for(
+                    _generate_overview_images(world_path, world_name, world_content),
+                    timeout=30.0  # 30 second timeout
+                )
+                favicon_info = await asyncio.wait_for(
+                    _generate_world_favicon(world_path, world_name, world_content),
+                    timeout=30.0  # 30 second timeout
+                )
+            except asyncio.TimeoutError:
+                image_generation_info = "\n\nNote: Image generation timed out after 30 seconds"
+                favicon_info = ""
+            except Exception as e:
+                image_generation_info = f"\n\nNote: Image generation failed: {str(e)}"
+                favicon_info = ""
 
         # Create success response
         return _create_success_response(
